@@ -3,16 +3,18 @@ package main
 import (
 	"log"
 	"net"
+
+	sv "github.com/dneil5648/LazyHTTPServer/server"
 )
 
-func basicHandler(rq *Request, conn net.Conn) {
+func basicHandler(rq *sv.Request, conn net.Conn) {
 	respBody := "Sucessfully Received Data"
 	headers := map[string]string{
 		"Content-Length": "",
 		"Content-Type":   "text/plain",
 	}
 
-	response := NewResponse(200, rq.Protocol, respBody, headers)
+	response := sv.NewResponse(200, rq.Protocol, respBody, headers)
 	_, err := conn.Write([]byte(response.Build()))
 	if err != nil {
 		return
@@ -23,8 +25,8 @@ func basicHandler(rq *Request, conn net.Conn) {
 }
 
 func main() {
-	serve := NewServer(":3000")
+	serve := sv.NewServer(":3000")
 
-	serve.mux.AddRoute("POST", "/", basicHandler)
+	serve.Mux.AddRoute("POST", "/", basicHandler)
 	log.Fatal(serve.Start())
 }

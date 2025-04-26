@@ -25,7 +25,7 @@ import (
 type Server struct {
 	listenAddr string
 	listener   net.Listener
-	mux        *ServerMux
+	Mux        *ServerMux
 	quitchan   chan struct{}
 	msgch      chan []byte
 	requestch  chan Request
@@ -93,7 +93,7 @@ func (r *Response) Build() string {
 func NewServer(addr string) *Server {
 	return &Server{
 		listenAddr: addr,
-		mux:        NewServerMux(),
+		Mux:        NewServerMux(),
 		quitchan:   make(chan struct{}),
 		msgch:      make(chan []byte, 10),
 	}
@@ -185,7 +185,7 @@ func (sv *Server) handleConn(conn net.Conn) {
 		req.Body = body
 	}
 
-	go sv.mux.route(req, conn)
+	go sv.Mux.route(req, conn)
 
 	fmt.Println("Body:", req.Body)
 	fmt.Println("Headers:", req.Headers)
